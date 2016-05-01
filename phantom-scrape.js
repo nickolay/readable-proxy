@@ -22,6 +22,14 @@ function outputJSON(object) {
  * Note: This function runs within page environment.
  */
 function runReadability(url, userAgent, pageContent) {
+  // PhantomJS's onConsoleMessage converts all the `console.log()` parameters
+  // from Readability's debug output to a single string, which is not very useful
+  // since you get strings like "Reader: (Readability) [Object Arguments]".
+  // Luckily Readability will use `dump()` if we define it here.
+  window.dump = function(msg) {
+    console.log(msg.trim()); // this triggers page.onConsoleMessage below
+  };
+
   var location = document.location;
   var uri = {
     spec: location.href,
@@ -31,7 +39,7 @@ function runReadability(url, userAgent, pageContent) {
     pathBase: location.protocol + "//" + location.host + location.pathname.substr(0, location.pathname.lastIndexOf("/") + 1)
   };
   try {
-    var readabilityObj = new Readability(uri, document);
+    var readabilityObj = new Readability(uri, document, {debug: false});
     var isProbablyReaderable = readabilityObj.isProbablyReaderable();
     var result = readabilityObj.parse();
     if (result) {
