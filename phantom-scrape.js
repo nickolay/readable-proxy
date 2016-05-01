@@ -94,9 +94,9 @@ page.open(url, function(status) {
     exitWithError("Couldn't inject " + readabilityPath);
   }
   var result = page.evaluate(runReadability, url, page.settings.userAgent, page.content);
-  if (result && result.error) {
+  if (result.error) {
     result.error.consoleLogs = consoleLogs;
-  } else if (result && result.content) {
+  } else {
     result.consoleLogs = consoleLogs;
   }
   outputJSON(result);

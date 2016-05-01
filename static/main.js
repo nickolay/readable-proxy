@@ -32,6 +32,7 @@
         })
         .then(function(jsonResponse) {
           q("#stderr").textContent = jsonResponse.stderr || "<stderr is empty>";
+          q("#logs").value = (jsonResponse.consoleLogs || []).join("\n");
           if (jsonResponse.error) {
             throw jsonResponse.error;
           } else {
@@ -41,7 +42,6 @@
             q("#length").textContent = jsonResponse.length;
             q("#dir").textContent = jsonResponse.dir;
             q("#excerpt").textContent = jsonResponse.excerpt;
-            q("#logs").value = (jsonResponse.consoleLogs || []).join("\n");
             target.contentDocument.body.innerHTML = jsonResponse.content;
           }
           q("#submit-btn").disabled = false;
