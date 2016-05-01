@@ -61,7 +61,7 @@ function runReadability(url, userAgent, pageContent) {
   } catch (err) {
     return {
       error: {
-        message: err.message,
+        message: "runReadability - " + err.message,
         line: err.line,
         stack: err.stack,
         sourceHTML: pageContent || "Empty page content."
