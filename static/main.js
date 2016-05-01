@@ -4,19 +4,20 @@
   var q = document.querySelector.bind(document);
 
   function injectReadableContents(params, target) {
-    q("#error").classList.add("hide");
+    q("#error-container").classList.add("hide");
     var req = new XMLHttpRequest();
     var apiUrl = [
       "/api/get?sanitize=" + (params.sanitize ? "yes" : "no"),
       "url=" + encodeURIComponent(params.url),
-      "userAgent=" + encodeURIComponent(params.userAgent)
+      "userAgent=" + encodeURIComponent(params.userAgent),
+      "phantomJSDebug=" + params.phantomJSDebug
     ].join("&");
     req.open("GET", apiUrl, false);
     req.send(null);
     var jsonResponse = JSON.parse(req.responseText);
     if (jsonResponse.error) {
       q("#error").textContent = jsonResponse.error.message;
-      q("#error").classList.remove("hide");
+      q("#error-container").classList.remove("hide");
       q("#readerable").textContent = "";
       q("#title").textContent = "";
       q("#byline").textContent = "";
@@ -36,6 +37,7 @@
       q("#logs").value = (jsonResponse.consoleLogs || []).join("\n");
       target.contentDocument.body.innerHTML = jsonResponse.content;
     }
+    q("#stderr").textContent = jsonResponse.stderr || "<stderr is empty>";
   }
 
   function init() {
@@ -46,6 +48,7 @@
       injectReadableContents({
         url: url,
         sanitize: q("#sanitize").checked,
+        phantomJSDebug: q("#phantomJSDebug").checked,
         userAgent: q("#userAgent").value
       }, q("#target"));
     });

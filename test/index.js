@@ -41,7 +41,7 @@ describe("Tests", function() {
 
     it("should handle rejection on process call error", function(done) {
       var fakeErr = new Error("Boom");
-      sandbox.stub(childProcess, "execFile", function(exec, args, cb) {
+      sandbox.stub(childProcess, "execFile", function(exec, args, opts, cb) {
         cb(fakeErr);
       });
 
@@ -52,7 +52,7 @@ describe("Tests", function() {
     });
 
     it("should reject on stdout json parsing failure", function(done) {
-      sandbox.stub(childProcess, "execFile", function(exec, args, cb) {
+      sandbox.stub(childProcess, "execFile", function(exec, args, opts, cb) {
         cb(null, "invalid.json.string");
       });
 
@@ -63,7 +63,7 @@ describe("Tests", function() {
     });
 
     it("should reject on data extraction error", function(done) {
-      sandbox.stub(childProcess, "execFile", function(exec, args, cb) {
+      sandbox.stub(childProcess, "execFile", function(exec, args, opts, cb) {
         cb(null, JSON.stringify({error: {message: "Foo"}}));
       });
 
@@ -75,7 +75,7 @@ describe("Tests", function() {
     });
 
     it("should fulfill with a valid json result", function(done) {
-      sandbox.stub(childProcess, "execFile", function(exec, args, cb) {
+      sandbox.stub(childProcess, "execFile", function(exec, args, opts, cb) {
         cb(null, JSON.stringify({title: "plop", content: "plip"}));
       });
 
@@ -131,7 +131,7 @@ describe("Tests", function() {
         });
 
         it("should return scraped response", function(done) {
-          sandbox.stub(childProcess, "execFile", function(exec, args, cb) {
+          sandbox.stub(childProcess, "execFile", function(exec, args, opts, cb) {
             cb(null, JSON.stringify({title: "plop"}));
           });
 
@@ -145,7 +145,7 @@ describe("Tests", function() {
         });
 
         it("should return a server error on call error", function(done) {
-          sandbox.stub(childProcess, "execFile", function(exec, args, cb) {
+          sandbox.stub(childProcess, "execFile", function(exec, args, opts, cb) {
             cb(null, JSON.stringify({error: {message: "fail"}}));
           });
 
@@ -159,7 +159,7 @@ describe("Tests", function() {
         });
 
         it("should apply custom user agent when provided", function(done) {
-          sandbox.stub(childProcess, "execFile", function(exec, args, cb) {
+          sandbox.stub(childProcess, "execFile", function(exec, args, opts, cb) {
             cb(null, "{}");
           });
 
@@ -173,7 +173,7 @@ describe("Tests", function() {
         });
 
         it("should return sanitized response when sanitize arg is passed", function(done) {
-          sandbox.stub(childProcess, "execFile", function(exec, args, cb) {
+          sandbox.stub(childProcess, "execFile", function(exec, args, opts, cb) {
             cb(null, JSON.stringify({content: "<p><script>alert('xss')</script>plop</p>"}));
           });
 

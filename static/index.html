@@ -18,7 +18,10 @@
     <div class="page-header">
       <h1>Readability.js <small>test page</small></h1>
     </div>
-    <div class="alert alert-danger hide" id="error"></div>
+    <div class="alert alert-danger hide" id="error-container">
+      <div id="error"></div>
+      <a href="#debug">Jump to debug output...</a>
+    </div>
     <div class="row">
       <div class="col-md-6">
         <form class="form-horizontal" id="form">
@@ -73,9 +76,16 @@
         </div>
       </div>
     </div>
-    <div>
+    <div id="debug">
       <h3>Console logs</h3>
       <textarea id="logs"></textarea>
+      <h3>PhantomJS stderr</h3>
+      <div class="checkbox">
+        <label><input type="checkbox" id="phantomJSDebug">
+          Enable additional debugging output from PhantomJS (useful for troubleshooting the "Unable to access..." error)
+        </label>
+      </div>
+      <pre id="stderr"></pre>
     </div>
   </div>
   <script src="main.js"></script>
