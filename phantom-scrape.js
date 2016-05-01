@@ -4,10 +4,14 @@ var url = system.args[1];
 var readabilityPath = system.args[2];
 var userAgent = system.args[3];
 var consoleLogs = [];
+var injectingReadabilityJS = false;
 
 // Prevent page js errors to break JSON output
 // XXX: should we log these instead?
-phantom.onError = page.onError = function(){};
+phantom.onError = page.onError = function(err) {
+  if (injectingReadabilityJS)
+    consoleLogs.push("While injecting Readability.js - " + err)
+};
 
 function exitWithError(message) {
   outputJSON({error: {message: message}});
@@ -90,9 +94,11 @@ page.open(url, function(status) {
   if (status !== "success") {
     return exitWithError("Unable to access " + url);
   }
+  injectingReadabilityJS = true;
   if (!page.injectJs(readabilityPath)) {
     exitWithError("Couldn't inject " + readabilityPath);
   }
+  injectingReadabilityJS = false;
   var result = page.evaluate(runReadability, url, page.settings.userAgent, page.content);
   if (result.error) {
     result.error.consoleLogs = consoleLogs;
